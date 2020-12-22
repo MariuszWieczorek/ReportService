@@ -11,7 +11,7 @@ namespace ReportService.Repositories
     {
         public List<Error> GetLastErrors(int intervalInMinutes)
         {
-            // docelowo pobieranie z bazy
+            // TODO: Pobieramy z bazy
 
             return new List<Error>
             {

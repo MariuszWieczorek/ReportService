@@ -1,4 +1,5 @@
-﻿using EmailSender;
+﻿using Cipher;
+using EmailSender;
 using ReportService.Core.Domains;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,15 @@ namespace ReportService.ConsoleApp
     {
         static void Main(string[] args)
         {
+
+            var stringCipher = new StringCipher("1");
+            string passwordToDecrypt = "Ala ma kota";
+            var encryptedPassword = stringCipher.Encrypt("Ala ma kota");
+            var decryptedPassword = stringCipher.Decrypt(encryptedPassword);
+            Console.WriteLine(encryptedPassword);
+            Console.WriteLine(decryptedPassword);
+
+            return;
 
             string emailReciver = @"m.wieczorek1972@gmail.com";
             int intervalInMinutes = 10;

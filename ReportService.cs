@@ -1,4 +1,5 @@
-﻿using EmailSender;
+﻿using Cipher;
+using EmailSender;
 using ReportService.Core;
 using ReportService.Core.Repositories;
 
@@ -30,6 +31,8 @@ namespace ReportService
         private string _receiverEmail;
 
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
+        private StringCipher _stringCipher = new StringCipher("x1");
 
         /// <summary>
         /// Metoda, która będzie wywoływana co określony interval

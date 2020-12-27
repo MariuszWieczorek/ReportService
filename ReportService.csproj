@@ -89,6 +89,10 @@
       <Project>{cf408ec1-cdc3-49f1-ad03-848b43601a57}</Project>
       <Name>EmailSender</Name>
     </ProjectReference>
+    <ProjectReference Include="ReportService.Core\ReportService.Core.csproj">
+      <Project>{505ec4b9-a18c-4e63-b7de-787728fed8d3}</Project>
+      <Name>ReportService.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

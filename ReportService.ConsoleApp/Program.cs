@@ -25,8 +25,8 @@ namespace ReportService.ConsoleApp
                 Port = 587,
                 EnableSsl = true,
                 SenderName = "Mariusz Wieczorek",
-                SenderEmail = @"mariusz.wieczorek.testy@gmail.com",
-                SenderEmailPassword = " rmhfvaurzyxnuztn" 
+                SenderEmail = "mariusz.wieczorek.testy@gmail.com",
+                SenderEmailPassword = "rmhfvaurzyxnuztn" 
             });
 
             // pobieranie z bazy ostatniego raportu
@@ -74,8 +74,7 @@ namespace ReportService.ConsoleApp
 
 
             Console.WriteLine("Wysyłanie raportu dziennego ...");
-            //email.Send("Raport dzienny", htmlEmail.GenerateReport(report), emailReciver).Wait();
-            email.Send("Raport dzienny", "Test", emailReciver).Wait();
+            email.Send("Raport dzienny", htmlEmail.GenerateReport(report), emailReciver).Wait();
             Console.WriteLine("Wysyłano raport dzienny");
 
             Console.WriteLine("wysyłanie raportu błędów ...");

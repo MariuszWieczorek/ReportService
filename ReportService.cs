@@ -1,6 +1,7 @@
 ﻿using EmailSender;
-using ReportService.Models;
-using ReportService.Repositories;
+using ReportService.Core;
+using ReportService.Core.Repositories;
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

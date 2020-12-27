@@ -54,10 +54,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\Domains\Error.cs" />
-    <Compile Include="Models\Domains\Report.cs" />
-    <Compile Include="Models\Domains\ReportPosition.cs" />
-    <Compile Include="Models\GenerateHtmlEmail.cs" />
     <Compile Include="ProjectInstaller.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -72,8 +68,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\ErrorRepository.cs" />
-    <Compile Include="Repositories\ReportRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -91,6 +85,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ReportService.Core\ReportService.Core.csproj">
+      <Project>{505ec4b9-a18c-4e63-b7de-787728fed8d3}</Project>
+      <Name>ReportService.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="EmailSender\EmailSender.csproj">
       <Project>{cf408ec1-cdc3-49f1-ad03-848b43601a57}</Project>
       <Name>EmailSender</Name>

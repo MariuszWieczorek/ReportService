@@ -16,7 +16,7 @@ namespace ReportService.Repositories
             return new List<Error>
             {
                 new Error {Message = "błąd testowy 1", Date = DateTime.Now},
-                new Error {Message = "błąd testowy 1", Date = DateTime.Now},
+                new Error {Message = "błąd testowy 2", Date = DateTime.Now},
             };
 
         }

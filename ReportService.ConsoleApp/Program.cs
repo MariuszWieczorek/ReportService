@@ -17,7 +17,8 @@ namespace ReportService.ConsoleApp
             int intervalInMinutes = 10;
             var htmlEmail = new GenerateHtmlEmail();
 
-            // 465,587
+            //  465,587
+            // "txoisgkslphjeogp" "rmhfvaurzyxnuztn"
             var email = new Email(new EmailParams
             {
                 HostSmtp = "smtp.gmail.com",
@@ -25,7 +26,7 @@ namespace ReportService.ConsoleApp
                 EnableSsl = true,
                 SenderName = "Mariusz Wieczorek",
                 SenderEmail = @"mariusz.wieczorek.testy@gmail.com",
-                SenderEmailPassword = @"txoisgkslphjeogp" //" rmhfvaurzyxnuztn"
+                SenderEmailPassword = " rmhfvaurzyxnuztn" 
             });
 
             // pobieranie z bazy ostatniego raportu

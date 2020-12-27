@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EmailSender.Extensions;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -8,9 +9,8 @@ using System.Net.Mime;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using ReportService.Extentions;
 
-namespace ReportService.Models
+namespace EmailSender
 {
     public class Email
     {

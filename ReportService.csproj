@@ -54,12 +54,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extentions\StringExtentions.cs" />
     <Compile Include="Models\Domains\Error.cs" />
     <Compile Include="Models\Domains\Report.cs" />
     <Compile Include="Models\Domains\ReportPosition.cs" />
-    <Compile Include="Models\Email.cs" />
-    <Compile Include="Models\EmailParams.cs" />
     <Compile Include="Models\GenerateHtmlEmail.cs" />
     <Compile Include="ProjectInstaller.cs">
       <SubType>Component</SubType>
@@ -92,6 +89,12 @@
     <EmbeddedResource Include="ProjectInstaller.resx">
       <DependentUpon>ProjectInstaller.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="EmailSender\EmailSender.csproj">
+      <Project>{cf408ec1-cdc3-49f1-ad03-848b43601a57}</Project>
+      <Name>EmailSender</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

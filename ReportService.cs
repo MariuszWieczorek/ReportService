@@ -19,10 +19,11 @@ namespace ReportService
 {
     public partial class ReportService : ServiceBase
     {
-        private const int _sendHour = 8;
-       
-        private const int _intervalInMinutes = 30;
-        private Timer _timer = new Timer(_intervalInMinutes * 1000); // ważne wybieramy namespace: System.Timers 
+        private readonly int _sendHour;
+        private readonly int _intervalInMinutes;
+        private readonly bool _sendReports;
+
+        private Timer _timer; // ważne wybieramy namespace: System.Timers 
         
         private ErrorRepository _errorRepository = new ErrorRepository();
         private ReportRepository _reportRepository = new ReportRepository();
@@ -32,26 +33,34 @@ namespace ReportService
 
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-        private StringCipher _stringCipher = new StringCipher("x1");
+        private StringCipher _stringCipher = new StringCipher("163F0C86-673A-426F-97CA-2A60A44134C7");
+        private const string NoEncryptedPasswordPrefix = "encrypt:";
 
         /// <summary>
         /// Metoda, która będzie wywoływana co określony interval
         /// </summary>
         public ReportService()
         {
+            
             InitializeComponent();
-
             try
             {
+                _sendHour = int.Parse(ConfigurationManager.AppSettings["SendHour"]);
+                _intervalInMinutes = int.Parse(ConfigurationManager.AppSettings["IntervalInMinutes"]);
+                _sendReports = bool.Parse(ConfigurationManager.AppSettings["SendReports"]);
+
+                int intervalInMiliseconds = _intervalInMinutes * 60 * 1000;
+                _timer = new Timer(intervalInMiliseconds);
+
                 _receiverEmail = ConfigurationManager.AppSettings["ReceiverEmail"];
                 _email = new Email(new EmailParams
                 {
                     HostSmtp = ConfigurationManager.AppSettings["HostSmtp"],
                     Port = int.Parse(ConfigurationManager.AppSettings["Port"]),
-                    EnableSsl  = bool.Parse(ConfigurationManager.AppSettings["HostSmtp"]), 
+                    EnableSsl  = bool.Parse(ConfigurationManager.AppSettings["EnableSsl"]), 
                     SenderName = ConfigurationManager.AppSettings["SenderName"],
                     SenderEmail = ConfigurationManager.AppSettings["SenderEmail"],
-                    SenderEmailPassword = ConfigurationManager.AppSettings["SenderEmailPassword"],
+                    SenderEmailPassword = DecryptSenderEmailPassword(),
                 });
             }
             catch (Exception ex)
@@ -59,6 +68,25 @@ namespace ReportService
                 Logger.Error(ex, ex.Message);
                 throw new Exception(ex.Message);
             }
+        }
+        /// <summary>
+        /// Metoda zwraca odszyfrowane hasło odczytane z pliku konfiguracyjnego
+        /// Jeżeli w pliku konfiguracyjnym hasło to było nie zaszyfrowane - umowny zapis encrypt:
+        /// to szyfruje to hasło i zapisuje wersję zaszyfrowaną do pliku
+        /// </summary>
+        /// <returns></returns>
+        private string DecryptSenderEmailPassword()
+        {
+            var encryptedPassword = ConfigurationManager.AppSettings["SenderEmailPassword"];
+            if (encryptedPassword.StartsWith(NoEncryptedPasswordPrefix))
+            {
+                var passwordToEncrypt = encryptedPassword.Replace(NoEncryptedPasswordPrefix, string.Empty);
+                encryptedPassword = _stringCipher.Encrypt(passwordToEncrypt);
+                var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+                configFile.AppSettings.Settings["SenderEmailPassword"].Value = encryptedPassword;
+                configFile.Save();
+            }
+            return _stringCipher.Decrypt(encryptedPassword);
         }
 
         protected override void OnStart(string[] args)
@@ -72,11 +100,10 @@ namespace ReportService
        // bo nie będziemy mogli się podpiąć do _timer.Elapsed
         private async void DoWork(object sender, ElapsedEventArgs e)
         {
-
             try
             {
                 // wskazówki odnośnie używania metod asynchronicznych wyjątek przy void zamiast Task
-               // await SendError();
+                await SendError();
                 await SendReport();
             }
             catch (Exception ex)
@@ -84,7 +111,6 @@ namespace ReportService
                 Logger.Error(ex, ex.Message);
                 throw new Exception(ex.Message);
             }
-            
         }
  
         private async Task SendError()
@@ -103,6 +129,9 @@ namespace ReportService
         private async Task SendReport()
         {
             var actualHour = DateTime.Now.Hour;
+
+            if (!_sendReports)
+                return;
 
             if (actualHour < _sendHour)
                 return;

@@ -11,7 +11,7 @@ namespace ReportService
     {
         public string GenerateErrors(List<Error> errors, int interval)
         {
-            if (errors != null)
+            if (errors == null)
                 throw new ArgumentNullException(nameof(errors));
 
             if (!errors.Any())
@@ -20,8 +20,8 @@ namespace ReportService
             var html = $"Błędy z ostatnich {interval} minut. <br /> <br />";
             html += $@"<table border=1 cellpadding=5  cellspacing=1>
                 <tr>
-                    <td> align=center bgcolor=lightgrey>Wiadomość</td>
-                    <td> align=center bgcolor=lightgrey>data</td>
+                    <td align=center bgcolor=lightgrey>Wiadomość</td>
+                    <td align=center bgcolor=lightgrey>data</td>
                     
                 </tr>
                 ";
@@ -30,8 +30,8 @@ namespace ReportService
             {
                 html +=
                 $@"<tr>
-                    <td> align=center bgcolor=lightgrey>{error.Message}</td>
-                    <td> align=center bgcolor=lightgrey>{error.Date.ToString("dd-MM-yyyy HH:mm")}</td>
+                    <td align=center bgcolor=white>{error.Message}</td>
+                    <td align=center bgcolor=white>{error.Date.ToString("dd-MM-yyyy HH:mm")}</td>
                 </tr>
                 ";
             }
@@ -48,7 +48,7 @@ namespace ReportService
 
 
             var html = $@"Raport {report.Title} 
-                        z dnia {report.Date.ToString("dd-MM-YYYY")}. <br /> <br />";
+                        z dnia {report.Date.ToString("dd-MM-yyyy")}. <br /> <br />";
 
 
             // Jeżeli raport zawiera jakiekolwiek pozycje to generujemy tabelkę w HTML
@@ -56,9 +56,9 @@ namespace ReportService
             {
                 html += $@"<table border=1 cellpadding=5  cellspacing=1>
                 <tr>
-                    <td> align=center bgcolor=lightgrey>Tytuł</td>
-                    <td> align=center bgcolor=lightgrey>Opis</td>
-                    <td> align=center bgcolor=lightgrey>Wartość</td>
+                    <td align=center bgcolor=lightgrey>Tytuł</td>
+                    <td align=center bgcolor=lightgrey>Opis</td>
+                    <td align=center bgcolor=lightgrey>Wartość</td>
                 </tr>
                 ";
 
@@ -66,9 +66,9 @@ namespace ReportService
                 {
                     html +=
                     $@"<tr>
-                    <td> align=center bgcolor=lightgrey>{position.Title}</td>
-                    <td> align=center bgcolor=lightgrey>{position.Description}</td>
-                    <td> align=center bgcolor=lightgrey>{position.Value.ToString("0.00")} zł</td>
+                    <td align=center bgcolor=white>{position.Title}</td>
+                    <td align=center bgcolor=white>{position.Description}</td>
+                    <td align=center bgcolor=white>{position.Value.ToString("0.00")} zł</td>
                 </tr>
                 ";
                 }

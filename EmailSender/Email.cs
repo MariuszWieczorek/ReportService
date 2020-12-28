@@ -60,7 +60,7 @@ namespace EmailSender
                 <head>
                 </head>
                 <body>
-            <div style='font-size: 16px; padding: 10px; font-family: Arial; line-height: 1.4 >
+            <div style='font-size: 16px; padding: 10px; font-family: Arial; line-height: 1.4'>
                 {body}
             </div>
             </body>
@@ -72,6 +72,7 @@ namespace EmailSender
             {
                 Host = _hostSmtp,
                 EnableSsl = _enableSsl,
+                Port = _port,
                 DeliveryMethod = SmtpDeliveryMethod.Network,
                 UseDefaultCredentials=false,
                 Credentials = new NetworkCredential(_senderEmail,_senderEmailPassword) 

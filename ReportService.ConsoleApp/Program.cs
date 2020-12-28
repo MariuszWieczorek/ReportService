@@ -3,6 +3,7 @@ using EmailSender;
 using ReportService.Core.Domains;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,30 +15,20 @@ namespace ReportService.ConsoleApp
         static void Main(string[] args)
         {
 
-            var stringCipher = new StringCipher("1");
-            string passwordToDecrypt = "Ala ma kota";
-            var encryptedPassword = stringCipher.Encrypt("Ala ma kota");
-            var decryptedPassword = stringCipher.Decrypt(encryptedPassword);
-            Console.WriteLine(encryptedPassword);
-            Console.WriteLine(decryptedPassword);
-
-            return;
-
             string emailReciver = @"m.wieczorek1972@gmail.com";
             int intervalInMinutes = 10;
             var htmlEmail = new GenerateHtmlEmail();
 
-            //  465,587
-            // "txoisgkslphjeogp" "rmhfvaurzyxnuztn"
             var email = new Email(new EmailParams
             {
-                HostSmtp = "smtp.gmail.com",
-                Port = 587,
-                EnableSsl = true,
-                SenderName = "Mariusz Wieczorek",
-                SenderEmail = "mariusz.wieczorek.testy@gmail.com",
-                SenderEmailPassword = "rmhfvaurzyxnuztn" 
+                HostSmtp = ConfigurationManager.AppSettings["HostSmtp"],
+                Port = int.Parse(ConfigurationManager.AppSettings["Port"]),
+                EnableSsl = bool.Parse(ConfigurationManager.AppSettings["EnableSsl"]),
+                SenderName = ConfigurationManager.AppSettings["SenderName"],
+                SenderEmail = ConfigurationManager.AppSettings["SenderEmail"],
+                SenderEmailPassword = DecryptSenderEmailPassword(),
             });
+
 
             // pobieranie z bazy ostatniego raportu
             var report = new Report()
@@ -87,6 +78,7 @@ namespace ReportService.ConsoleApp
             email.Send("Raport dzienny", htmlEmail.GenerateReport(report), emailReciver).Wait();
             Console.WriteLine("Wysyłano raport dzienny");
 
+
             Console.WriteLine("wysyłanie raportu błędów ...");
             // dodanie .Wait() pozwala na wywołanie metody asynchronicznej w nie asynchronicznej klasie
             // w aplikacji nie testowej tego nie używać !
@@ -96,6 +88,22 @@ namespace ReportService.ConsoleApp
 
 
 
+        }
+
+        private static string DecryptSenderEmailPassword()
+        {
+            var stringCipher = new StringCipher("163F0C86-673A-426F-97CA-2A60A44134C7");
+            var encryptedPassword = ConfigurationManager.AppSettings["SenderEmailPassword"];
+            if (encryptedPassword.StartsWith("encrypt:"))
+            {
+                var passwordToEncrypt = encryptedPassword.Replace("encrypt:", string.Empty);
+                encryptedPassword = stringCipher.Encrypt(passwordToEncrypt);
+
+                var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+                configFile.AppSettings.Settings["SenderEmailPassword"].Value = encryptedPassword;
+                configFile.Save();
+            }
+            return stringCipher.Decrypt(encryptedPassword);
         }
     }
 }
